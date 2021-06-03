@@ -1,0 +1,35 @@
+<project name="ant-sample" basedir="." default="build">
+    <property environment="env"/>
+    <path id="classpath.jctools">
+        <pathelement location="${env.JC_HOME}/lib/apduio.jar"/>
+    </path>
+
+    <!-- properties -->
+    <property name="src.dir"     value="src"/>
+    <property name="build.dir"   value="out"/>
+    <property name="classes.dir" value="${build.dir}/bin"/>
+
+    <!-- targets -->
+    <target name="compile" description="compile project">
+        <mkdir dir="${classes.dir}"/>
+        <javac srcdir="${src.dir}" destdir="${classes.dir}" includeantruntime="false">
+            <classpath refid="classpath.jctools"/>
+        </javac>
+    </target>
+
+    <target name="run" depends="compile" description="run application">
+        <java classname="playground.javacard.jcterminal.JCTerminal" fork="true">
+            <classpath refid="classpath.jctools"/>
+            <classpath path="${classes.dir}" />
+        </java>
+    </target>
+
+    <target name="build" depends="compile" description="build application"/>
+
+    <target name="clean" description="clean up build files">
+        <delete dir="${build.dir}"/>
+    </target>
+
+    <target name="rebuild" depends="clean,build" description="rebuild application"/>
+
+</project>
